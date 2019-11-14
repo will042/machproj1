@@ -20,7 +20,7 @@
 % A single figure window will show all plots for position, as well as 
 % first and second order kinematic coefficients. Executing this script
 % will also generate png files for each individual plot. Files will be
-% saved in the same directory the script is executed in
+% saved in the same directory the script is executed in.
 %
 %-------------------------------------------------------------------------%
 
@@ -42,7 +42,7 @@ range = linspace(0,2*pi,500);
 
 for i = 1:6
     for n = 1:500
-    [pos, k1, k2] = solvemechanism(range(n));
+    [pos, k1, k2, meancond] = solvemechanism(range(n));
     
     % Cartesian coordinates
     Rx(i,n) = pos(i,1)*cos(pos(i,2));
@@ -57,6 +57,9 @@ for i = 1:6
     
     %2nd order kinematic coefficients
     kin2(:,n)=k2(:,1);
+    
+    
+    meancondition(n)=meancond;
     
     end
 end
@@ -83,7 +86,9 @@ AnglePos = figure('visible','off');
     xlabel('Input Angle \theta_2 (deg)')
     ylabel('Link Angle (deg)')
     xlim([0 360])
+    ylim([0 360])
     xticks(0:30:360)
+    yticks(0:60:360)
     grid    
     print(AnglePos,'-dpng', 'Plot - AnglePos.png')
     
@@ -115,7 +120,6 @@ VectorKin2 = figure('visible','off');
     ylabel('Vector Acceleration (in/s^2)')
     xlim([0 360])
     xticks(0:30:360)
-    yticks(-8:2:8)
     legend('f3p','f4p','f5p','Location','NorthWest')
     grid
     print(VectorKin2,'-dpng', 'Plot - VectorKin2.png')
@@ -127,7 +131,6 @@ AngleKin2 = figure('visible','off');
     ylabel('Angular Acceleration (deg/s^2)')
     xlim([0 360])
     xticks(0:30:360)
-    yticks(-60:20:60)
     grid
     print(AngleKin2,'-dpng', 'Plot - AngleKin2.png')
     
@@ -139,10 +142,10 @@ AngleKin2 = figure('visible','off');
     
 %% Display all Plots on Single Figure Window
  
-figure(1)
+figure(7)
 set(gcf, 'Position',  [100, 100, 1500, 700])
 
-VPos=subplot(2,3,1)
+VPos=subplot(2,3,1);
     plot(range,R(3,:),range,R(4,:),range,R(5,:), 'LineWidth',1)
     title('Position Vector Length vs Input Angle \theta_2')
     xlabel('Input Angle \theta_2 (deg)')
@@ -153,16 +156,18 @@ VPos=subplot(2,3,1)
     grid
 
 
-APos=subplot(2,3,4)
+APos=subplot(2,3,4);
     plot(range, th(3,:)*180/pi, 'LineWidth',1)
     title('Link Angle \theta_4 vs Input Angle \theta_2')
     xlabel('Input Angle \theta_2 (deg)')
     ylabel('Link Angle (deg)')
     xlim([0 360])
-    xticks(0:60:360)
+    ylim([0 360])
+    xticks(0:60:360)    
+    yticks(0:60:360)    
     grid    
     
-VK1=subplot(2,3,2)
+VK1=subplot(2,3,2);
     plot(range,kin1(1,:),range,kin1(2,:),range,kin1(3,:), 'LineWidth',1)
     title('1st Order Kinematic Coefficients - Vectors')
     xlabel('Input Angular Velocity \omega_2 (deg/s)')
@@ -172,7 +177,7 @@ VK1=subplot(2,3,2)
     legend('f3','f4','f5','Location','NorthWest')
     grid
 
-AK1=subplot(2,3,5)
+AK1=subplot(2,3,5);
     plot(range,kin1(5,:)*180/pi, 'LineWidth',1)
     title('1st Order Kinematic Coefficients - Angular')
     xlabel('Input Angular Velocity \omega_2 (deg/s)')
@@ -182,23 +187,29 @@ AK1=subplot(2,3,5)
     grid
     
     
-VK2=subplot(2,3,3)
+VK2=subplot(2,3,3);
     plot(range,kin2(1,:),range,kin2(2,:),range,kin2(3,:), 'LineWidth',1)
     title('2nd Order Kinematic Coefficients - Vectors')
     xlabel('Input Angular Acceleration \alpha_2 (deg/s^2)')
     ylabel('Vector Acceleration (in/s^2)')
     xlim([0 360])
     xticks(0:60:360)
-    yticks(-10:2:10)
     legend('f3''','f4''','f5''','Location','NorthWest')
     grid
 
-AK2=subplot(2,3,6)
+AK2=subplot(2,3,6);
     plot(range,kin2(5,:)*180/pi, 'LineWidth',1)
     title('2nd Order Kinematic Coefficients - Angular')
     xlabel('Input Angular Acceleration \alpha_2 (deg/s^2)')
     ylabel('Angular Acceleration (deg/s^2)')
     xlim([0 360])
     xticks(0:60:360)
-    yticks(-60:20:60)
     grid
+    
+    
+% figure
+% plot(range,meancondition)
+% title('Mean Condition')
+% xlabel('Theta 2')
+% ylabel('Mean Condition')
+% xticks(0:30:360)

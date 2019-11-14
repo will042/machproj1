@@ -30,7 +30,19 @@ point = solvemechanism(th2);
 
 for i = 1:6
     Rx(i) = point(i,1)*cos(point(i,2));
-    Ry(i) = point(i,1)*sin(point(i,2));
+    Ry(i) = point(i,1)*sin(point(i,2));        
+end
+
+TFx = isnan(Rx);
+TFy = isnan(Ry);
+Rx(TFx) = 0;
+Ry(TFy) = 0;
+for i = 1:6
+    if TFx(i) == 1 || TFy(i) ==1
+        flag = 1;
+    else
+        flag = 0;
+    end
 end
 
 
@@ -80,7 +92,20 @@ dim = ceil(max(abs(Ry(1)), abs(Ry(6))))+1;
 
 
 %% Generate Plot
+if flag == 1
+    plot(0,0, '--', 'LineWidth', 1)
+%     ylim([-dim dim]);
+%     xlim([-dim dim]);
+    xlabel('x')
+    ylabel('y')
+    pbaspect([1 1 1])
+    text = sprintf('\x03b8_2 = %2.0f\x00BA', th2/pi*180);    
+    text2 = sprintf('Error: Invalid Configuration');
+    delete(findall(gcf,'type','annotation'))
+    annotation('textbox',[.7 .0 .1 .2],'String',text,'FitBoxToText', 'on','EdgeColor', 'none')
+    annotation('textbox',[.35 .5 .1 .1],'String',text2,'EdgeColor', 'none')
 
+else 
 plot(   [Rx(1) Rx(1)+Rx(4)], [Ry(1) Ry(1)+Ry(4)], '-o', ...
         [0 Rx(2)], [0 Ry(2)], '-o', ...
         [-dim dim], [Ry(6)-hb/2-.1 Ry(6)-hb/2-.1], '--', ...
@@ -95,5 +120,5 @@ plot(   [Rx(1) Rx(1)+Rx(4)], [Ry(1) Ry(1)+Ry(4)], '-o', ...
     delete(findall(gcf,'type','annotation'))
     annotation('textbox',[.7 .0 .1 .2],'String',text,'FitBoxToText', 'on','EdgeColor', 'none')
     grid
-
+end
    

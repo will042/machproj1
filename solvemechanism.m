@@ -1,4 +1,4 @@
-function [position, k1, k2] = solvemechanism(th2)
+function [position, k1, k2, meancond] = solvemechanism(th2)
 %%------------------------------------------------------------------------%
 % Programmed by: William Ard, Hector Arredondo, Miranda Pepper 
 %-------------------------------------------------------------------------%
@@ -39,7 +39,21 @@ R = links(:,1);
 th = links(:,2)/180*pi; % Convert Degrees to Radians
 th(2) = th2;
 
+if R(2)*sin(th2) >= R(6) && th2 < pi
+         position = [NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN];
+               k1 = [NaN; NaN; NaN; NaN; NaN];
+               k2 = [NaN; NaN; NaN; NaN; NaN];
+         meancond = -50;
+         fprintf('Theta 2 = %5.2f      Invalid Mechanism Configuration\n', th2*180/pi)
 
+elseif R(2)*sin(th2) <= -1*R(1) && th2 > pi
+         position = [NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN];
+               k1 = [NaN; NaN; NaN; NaN; NaN];
+               k2 = [NaN; NaN; NaN; NaN; NaN];
+         meancond = -50;
+         fprintf('Theta 2 = %5.2f      Invalid Mechanism Configuration\n', th2*180/pi)
+
+else  % Solve Mechanism
 %% Vector Loops and Jacobian
 %
 %  Note: Each element of x corresponds to a value to be solved via
@@ -63,8 +77,7 @@ J = @(x)    [-cos(x(4))               0      0         x(1)*sin(x(4))           
 tol = 1;
 n = 1;
 x_old = [R(3); R(4); R(5); th(3); th(4)];
-
-while tol >= .0001 % Set tolerance for solution here
+while tol >= .01 % Set tolerance for solution here
     
 %     if rcond(J(x_old))<.001
 %           x_new=[NaN NaN NaN NaN NaN];
@@ -78,14 +91,26 @@ while tol >= .0001 % Set tolerance for solution here
 
     x_old = x_new;
     
+    conditn(n)=cond(J(x_new));
+    
     n = n+1;
-end
+    
+end  
 
 R(3)  = x_new(1);
 R(4)  = x_new(2);
 R(5)  = x_new(3);
 th(3) = x_new(4);
 th(4) = x_new(5);
+
+
+meancond=nearest(mean(conditn));
+
+if meancond>20000
+    fprintf('Theta 2 = %5.2f        Mean Condition = %11d        Iterations = %2d       (WARNING: NUMERICAL SYSTEM UNSTABLE)\n', th2/pi*180, meancond, n)
+else
+    fprintf('Theta 2 = %5.2f        Mean Condition = %11d        Iterations = %2d\n', th2/pi*180, meancond, n)
+end
 
 position = [R, th]; % Solution for mechanism position
 
@@ -112,5 +137,5 @@ f3 = @(x)   [R(2)*cos(th(2))-2*x(1)*x(4)*sin(th(3))-R(3)*x(4)^2*cos(th(2));
 k2 = J(x_new)\f3(k1);
 
 
-
-% end
+end
+end
