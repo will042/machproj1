@@ -46,10 +46,10 @@ for i = 1:6
 end
 
 
-%% Produce Coordinates for Slider Mechanism
+%% Produce Coordinates for Slider
 
-w = .2;  % Width of Slider
-h = .5;  % Height of Slider
+w = .024;  % Width of Slider (m)
+h = .059;  % Height of Slider (m)
 
 th3 = point(3,2);
 P1  = [point(3,1)-h/2, point(3,2)];
@@ -65,10 +65,10 @@ P5x = P4x-h*cos(th3);
 P5y = P4y-h*sin(th3);
 
 
-%% Produce Coordinates for Box
+%% Produce Coordinates for Rigid Body 5
 
-wb = 1.2  ;   % Width of Box
-hb = .8  ;   % Height of Box
+wb = .14  ;   % Width (m)
+hb = .095  ;   % Height (m)
 
 Cx = Rx(1)+Rx(4); % Center of Box
 Cy = Ry(1)+Ry(4);
@@ -85,19 +85,18 @@ P9y = P8y-hb;
 %% Determine Axes Limits
 
 % Find the longest vector corresponding to the height of the mechanism and
-% add 1 for padding. Plot is drawn on 1:1 scale, so axes limits are set 
+% add 10% for padding. Plot is drawn on 1:1 scale, so axes limits are set 
 % with one value, 'dim'.
 
-dim = ceil(max(abs(Ry(1)), abs(Ry(6))))+1; 
+dim = max([abs(Ry(1)), abs(Ry(6)), abs(Rx(4))])+.2*max([abs(Ry(1)), abs(Ry(6)), abs(Rx(4))]); 
 
 
 %% Generate Plot
 if flag == 1
     plot(0,0, '--', 'LineWidth', 1)
-%     ylim([-dim dim]);
-%     xlim([-dim dim]);
-    xlabel('x')
-    ylabel('y')
+    xlabel('x (m)')
+    ylabel('y (m)')
+    title('Shaper Mechanism')
     pbaspect([1 1 1])
     text = sprintf('\x03b8_2 = %2.0f\x00BA', th2/pi*180);    
     text2 = sprintf('Error: Invalid Configuration');
@@ -108,13 +107,14 @@ if flag == 1
 else 
 plot(   [Rx(1) Rx(1)+Rx(4)], [Ry(1) Ry(1)+Ry(4)], '-o', ...
         [0 Rx(2)], [0 Ry(2)], '-o', ...
-        [-dim dim], [Ry(6)-hb/2-.1 Ry(6)-hb/2-.1], '--', ...
+        [-dim dim], [Ry(6)-hb/2 Ry(6)-hb/2], '--', ...
         [P1x P2x P3x P4x P5x P1x], [P1y P2y P3y P4y P5y P1y], ...
         [P6x P7x P8x P9x P6x], [P6y P7y P8y P9y P6y], 'LineWidth', 1)
     ylim([-dim dim]);
     xlim([-dim dim]);
-    xlabel('x')
-    ylabel('y')
+    title('Shaper Mechanism')
+    xlabel('x (m)')
+    ylabel('y (m)')
     pbaspect([1 1 1])
     text = sprintf('\x03b8_2 = %2.0f\x00BA', th2/pi*180);     
     delete(findall(gcf,'type','annotation'))

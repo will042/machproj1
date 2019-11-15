@@ -73,7 +73,7 @@ VectPos = figure('visible','off');
     plot(range,R(3,:),range,R(4,:),range,R(5,:), 'LineWidth',1)
     title('Position Vector Length vs Input Angle \theta_2')
     xlabel('Input Angle \theta_2 (deg)')
-    ylabel('Vector Length (in)')
+    ylabel('Vector Length (m)')
     xlim([0 360])
     xticks(0:30:360)
     legend('R3','R4','R5','Location','SouthEast')
@@ -86,9 +86,9 @@ AnglePos = figure('visible','off');
     xlabel('Input Angle \theta_2 (deg)')
     ylabel('Link Angle (deg)')
     xlim([0 360])
-    ylim([0 360])
+    ylim([0 180])
     xticks(0:30:360)
-    yticks(0:60:360)
+    yticks(0:30:180)
     grid    
     print(AnglePos,'-dpng', 'Plot - AnglePos.png')
     
@@ -96,7 +96,7 @@ VectorKin1 = figure('visible','off');
     plot(range,kin1(1,:),range,kin1(2,:),range,kin1(3,:), 'LineWidth',1)
     title('1st Order Kinematic Coefficients - Vectors')
     xlabel('Input Angular Velocity \omega_2 (deg/s)')
-    ylabel('Vector Speed (in/s)')
+    ylabel('Vector Speed (m/s)')
     xlim([0 360])
     xticks(0:30:360)
     legend('f3','f4','f5','Location','NorthWest')
@@ -117,7 +117,7 @@ VectorKin2 = figure('visible','off');
     plot(range,kin2(1,:),range,kin2(2,:),range,kin2(3,:), 'LineWidth',1)
     title('2nd Order Kinematic Coefficients - Vectors')
     xlabel('Input Angular Acceleration \alpha_2 (deg/s^2)')
-    ylabel('Vector Acceleration (in/s^2)')
+    ylabel('Vector Acceleration (m/s^2)')
     xlim([0 360])
     xticks(0:30:360)
     legend('f3p','f4p','f5p','Location','NorthWest')
@@ -149,7 +149,7 @@ VPos=subplot(2,3,1);
     plot(range,R(3,:),range,R(4,:),range,R(5,:), 'LineWidth',1)
     title('Position Vector Length vs Input Angle \theta_2')
     xlabel('Input Angle \theta_2 (deg)')
-    ylabel('Vector Length (in)')
+    ylabel('Vector Length (m)')
     xlim([0 360])
     xticks(0:60:360)
     legend('R3','R4','R5','Location','SouthEast')
@@ -162,16 +162,16 @@ APos=subplot(2,3,4);
     xlabel('Input Angle \theta_2 (deg)')
     ylabel('Link Angle (deg)')
     xlim([0 360])
-    ylim([0 360])
+    ylim([0 180])
     xticks(0:60:360)    
-    yticks(0:60:360)    
+    yticks(0:30:180)  
     grid    
     
 VK1=subplot(2,3,2);
     plot(range,kin1(1,:),range,kin1(2,:),range,kin1(3,:), 'LineWidth',1)
     title('1st Order Kinematic Coefficients - Vectors')
     xlabel('Input Angular Velocity \omega_2 (deg/s)')
-    ylabel('Vector Speed (in/s)')
+    ylabel('Vector Speed (m/s)')
     xlim([0 360])
     xticks(0:60:360)
     legend('f3','f4','f5','Location','NorthWest')
@@ -191,7 +191,7 @@ VK2=subplot(2,3,3);
     plot(range,kin2(1,:),range,kin2(2,:),range,kin2(3,:), 'LineWidth',1)
     title('2nd Order Kinematic Coefficients - Vectors')
     xlabel('Input Angular Acceleration \alpha_2 (deg/s^2)')
-    ylabel('Vector Acceleration (in/s^2)')
+    ylabel('Vector Acceleration (m/s^2)')
     xlim([0 360])
     xticks(0:60:360)
     legend('f3''','f4''','f5''','Location','NorthWest')
@@ -206,7 +206,10 @@ AK2=subplot(2,3,6);
     xticks(0:60:360)
     grid
     
-    
+
+% Uncomment the code below to display a plot of the average condition of
+% the Jacobian to assess numerical stability of system
+
 % figure
 % plot(range,meancondition)
 % title('Mean Condition')
