@@ -13,6 +13,9 @@ function DrawMechanism(th2)
 % lengths and initial guesses can be specified in the 'position.txt' file. 
 % See 'solvemechanism.m' for more information.
 %
+% Approximate dimensions for the slider and the driven rigid body 5 can be
+% specified below.
+%
 %-------------------------------------------------------------------------%
 % Output:
 %
@@ -20,18 +23,35 @@ function DrawMechanism(th2)
 %
 %-------------------------------------------------------------------------%
 
+%% Specify Approximate Dimensions
+w = .024;  % Width of Slider (m)
+h = .059;  % Height of Slider (m)
+wb = .14  ;   % Width RB5 (m)
+hb = .095  ;   % Height RB5 (m)
+
 
 %% Generate Cartesian Coordinates for All Vectors
+
 
 Rx = ones(6,1);         %Preallocate for Computational Efficiency
 Ry = ones(6,1);
 
-point = solvemechanism(th2);
+
+point = solvemechanism(th2); %Solve position equation for a given theta2
+
+
+
+%Generate cartesian coordinates for all vectors
 
 for i = 1:6
     Rx(i) = point(i,1)*cos(point(i,2));
     Ry(i) = point(i,1)*sin(point(i,2));        
 end
+
+
+%If solvemechanism() has returned an invalid configuration, the results
+%will be NaN. Check for this condition, and if the configuration is
+%invalid, set a flag to 1 to prevent plotting of non-numeric elements.
 
 TFx = isnan(Rx);
 TFy = isnan(Ry);
@@ -48,10 +68,8 @@ end
 
 %% Produce Coordinates for Slider
 
-w = .024;  % Width of Slider (m)
-h = .059;  % Height of Slider (m)
 
-th3 = point(3,2);
+th3 = point(3,2); % Center of Slider
 P1  = [point(3,1)-h/2, point(3,2)];
 P1x = Rx(1)+P1(1,1)*cos(P1(1,2));
 P1y = Ry(1)+P1(1,1)*sin(P1(1,2));
@@ -67,10 +85,8 @@ P5y = P4y-h*sin(th3);
 
 %% Produce Coordinates for Rigid Body 5
 
-wb = .14  ;   % Width (m)
-hb = .095  ;   % Height (m)
 
-Cx = Rx(1)+Rx(4); % Center of Box
+Cx = Rx(1)+Rx(4); % Center of RB5
 Cy = Ry(1)+Ry(4);
 P6x = Cx-wb/2;
 P6y = Cy-hb/2;
@@ -92,7 +108,12 @@ dim = max([abs(Ry(1)), abs(Ry(6)), abs(Rx(4))])+.2*max([abs(Ry(1)), abs(Ry(6)), 
 
 
 %% Generate Plot
-if flag == 1
+
+
+% This will display invalid configuration on the figure window if the
+% mechanism is in an invalid physical configration.
+
+if flag == 1   
     plot(0,0, '--', 'LineWidth', 1)
     xlabel('x (m)')
     ylabel('y (m)')
@@ -104,6 +125,9 @@ if flag == 1
     annotation('textbox',[.7 .0 .1 .2],'String',text,'FitBoxToText', 'on','EdgeColor', 'none')
     annotation('textbox',[.35 .5 .1 .1],'String',text2,'EdgeColor', 'none')
 
+
+% This will plot the mechanism
+    
 else 
 plot(   [Rx(1) Rx(1)+Rx(4)], [Ry(1) Ry(1)+Ry(4)], '-o', ...
         [0 Rx(2)], [0 Ry(2)], '-o', ...
