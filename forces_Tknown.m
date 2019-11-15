@@ -1,10 +1,18 @@
-function forces_Tknown = forces_Tknown(th2, w2, a2, T2, R4max)
+function forces_Tknown = forces_Tknown(th2, w2, a2, T2)
 %%------------------------------------------------------------------------%
 % Programmed by: William Ard, Hector Arredondo, Miranda Pepper 
 %-------------------------------------------------------------------------%
 % Goal: Solve IDP to determine forces on mechanism links
+%       This version solves for the output force at rigid body 5 from a
+%       known torque on link 2.
 %-------------------------------------------------------------------------%
 % Inputs:
+% 
+% NOTE: Specify mass and MOI Data in 'massmoidata.txt'. +
+%       Format is:     Mass 2, Ig 2
+%                      Mass 3, Ig 3
+%                      Mass 4, Ig 4
+%                      Mass 5, Ig 5
 % 
 % th2 = The input angle for which the mechanism is to be solved.
 %
@@ -12,33 +20,31 @@ function forces_Tknown = forces_Tknown(th2, w2, a2, T2, R4max)
 %
 %  a2 = Angular Acceleration (rad/s^2) of input link (+CCW);
 %
+%  T2 = Applied torque on link 2 (N-m)
 %
 %-------------------------------------------------------------------------%
 % Outputs:
 %
-% 
+% A 12x1 matrix of resultant forces:
 %
-%
-%
+%       [F12x;
+%        F12y;
+%        F14x;
+%        F14y;
+%        F15;
+%        R8_F15;
+%        F23x;
+%        F23y;
+%        R7_F34;
+%        F34;
+%        F45;
+%        F5]
 %
 %-------------------------------------------------------------------------%
-
-
-%-------------------------------------------------------------------------%
-% Specifications for Mass Calculations
-
- rho = 7700;     % Density of Steel (kg/m^3)
-  A  = .02*.04;  % Cross Sectional Area of Links (m)
-  sm = .5;       % Slider Mass; (kg)
-  sh = .05;      % Slider Height; (m)
-  dm = 1;        % Rigid Body 5 Mass (kg)
-  dh = .01;        % Rigid Body 5 Height (m)
-  dw = rb5 %width
-
-
+  
   
 %-------------------------------------------------------------------------%
-% Solve for Position Vectors
+% Solve for Position Vectors (Miranda)
 
 [pos, k1, k2] = solvemechanism(th2);
 
@@ -55,28 +61,27 @@ th4 = pos(4,2);
 th5 = pos(5,2);
 th6 = pos(6,2);
   
-%-------------------------------------------------------------------------%
-% Mass, Moments of Intertia, Gravitational Constant
- 
-  m = [ 0;
-       rho*A*R2;
-       sm;
-       rho*A*R4max;
-       dm];
+R4max = (R1+R6)/cos(asin(R2/R1));
 
-  g = 9.81; % (m/s^2)  
+g= 9.81;
 
 
-Ig = [0;
-      1/12*m(2)*R2^2;
-      1/12*m(3)*sh^2;
-      1/12*m(4)*R4max^2
-      1/12*m(5)*(dh^2+dw^2];
+% Read Mass & MOI Data from Text File and Import (Miranda)
+
+fid = fopen('massmoidata.txt','r');
+data = fscanf(fid,'%f, %f',[2 4]);
+data = data';
+fclose(fid);
+
+ m = [0; 0; 0; 0; 0];
+Ig = [0; 0; 0; 0; 0];
+
+m(2:5,1) = data(:,1);
+Ig(2:5,1) = data(:,2);
       
-      
 
 %-------------------------------------------------------------------------%
-% Resolve angular accelerations of links
+% Resolve angular accelerations of links (Miranda)
 
 
 a = [0;
@@ -87,45 +92,15 @@ a = [0;
 
 
 
-
-
-%-------------------------------------------------------------------------%
-% This resolves the maximum length of the R4 link to be used for CG 
-% calculation
-
-% range = linspace(0,2*pi,500);
-% findR4 = ones(500,2);
-% for n = 1:500
-%     posrange = solvemechanism(range(n));
-%     findR4(n,:) = posrange(4,:);
-% end
-% R4max = max(findR4(:,1));
-
-%-------------------------------------------------------------------------%
-
 % Center of Gravity Lengths
     
 R9   = pos(2,1)/2 ;   % Link 2
-    
+
 R10  = R4max/2 ;      % Link 4
   
-% % Cartesian Coordinates
-% % R2G = [pos(2,1)/2 * cos(pos(2,2)) ; % Link 2
-% %        pos(2,1)/2 * sin(pos(2,2))];
-% % 
-% % R4G = [pos(4,1)/2 * cos(pos(4,2)) ; % Link 4
-% %        pos(4,1)/2 * sin(pos(4,2))];
-% % 
-% % RS  = [pos(2,1) * cos(pos(2,2))  ; % Slider
-% %        pos(2,1) * sin(pos(2,2)) ];
-% % 
-% % RB  = [pos(4,1) * cos(pos(4,2))  ; % Box
-% %        pos(4,1) * sin(pos(4,2)) ];
-% %    
-
 
 %-------------------------------------------------------------------------%
-% 1st & 2nd Order Kinematic Coefficients of CGs
+% 1st & 2nd Order Kinematic Coefficients of CGs (Hector)
 
 Fg  = [                       0                           0;
                    -R9*sin(th2)                 R9*cos(th2);
@@ -141,7 +116,7 @@ Fgp = [          0            0;
 
    
 %-------------------------------------------------------------------------%
-% Curvilinear Accelerations for CG's
+% Curvilinear Accelerations for CG's (Hector)
 
 ag=ones(5,2);
 
@@ -153,7 +128,7 @@ end
 
 
 %-------------------------------------------------------------------------%
-% IDP Solution
+% IDP Solution (William)
 
 F = [1  0  0  0  0  0  1  0  0  0  0  0;
      0  1  0  0  0  0  0  1  0  0  0  0;

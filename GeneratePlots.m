@@ -24,6 +24,7 @@
 %
 %-------------------------------------------------------------------------%
 
+%% This Section coded by Miranda & Hector
 
 % Preallocate for computational efficiency
 
@@ -34,8 +35,8 @@ th = ones(6,500);
 kin1 = ones(5,500);
 kin2 = ones(5,500);
     
-%% Generate matricies that represent polar coordinates, as well as 
-%  cartesian coordinates for 0 <= th2 <= 2pi
+% Generate matricies that represent polar coordinates, as well as 
+% cartesian coordinates for 0 <= th2 <= 2pi
 
 range = linspace(0,2*pi,500);
 
@@ -67,7 +68,7 @@ end
 range = range/pi*180;
 
 
-%% Export all Plots to PNG files
+%% Export all Plots to PNG files (Programmed by Hector)
 
 VectPos = figure('visible','off');
     plot(range,R(3,:),range,R(4,:),range,R(5,:), 'LineWidth',1)
@@ -140,7 +141,7 @@ AngleKin2 = figure('visible','off');
     
     
     
-%% Display all Plots on Single Figure Window
+%% Display all Plots on Single Figure Window (Programmed by Hector)
  
 figure(7)
 set(gcf, 'Position',  [100, 100, 1500, 700])
