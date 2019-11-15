@@ -6,7 +6,7 @@ function [position, k1, k2, meancond] = solvemechanism(th2)
 %-------------------------------------------------------------------------%
 % Inputs:
 % 
-% Link sizes and initial guesses may be specified in 'parameters.txt'.
+% Link sizes and initial guesses may be specified in 'linkdata.txt'.
 % There are 6 vectors for the mechanism. Each row of the text file
 % corresponds to a single vector in polar form. The first element specifies
 % the magnitude of the vector, and the second specifies the angle in
@@ -26,9 +26,13 @@ function [position, k1, k2, meancond] = solvemechanism(th2)
 %       k2  =   A 5x1 matrix corresponding to the second order kinematic
 %               coefficients [f3'; f4'; f5'; h3'; h4']
 %
+% meancond  =   The averaged condition of the Jacobian matrix over all
+%               iterations for a given input th2. Useful for assessing 
+%               numerical instability or dead positions.
+%
 %-------------------------------------------------------------------------%
 
-%% Get link size and initial guesses from position.txt
+%% Get link size and initial guesses from lengthdata.txt
 
 fid = fopen('lengthdata.txt','r');
 links = fscanf(fid,'%f, %f',[2 6]);
@@ -39,6 +43,8 @@ R = links(:,1);
 th = links(:,2)/180*pi; % Convert Degrees to Radians
 th(2) = th2;
 
+
+%% Assess mechanism to determine if system configuration is invalid & display error message (Programmed by Miranda)
 if R(2)*sin(th2) >= R(6) && th2 < pi
          position = [NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN];
                k1 = [NaN; NaN; NaN; NaN; NaN];
@@ -54,8 +60,8 @@ elseif R(2)*sin(th2) <= -1*R(1) && th2 > pi
          fprintf('Theta 2 = %5.2f      Invalid Mechanism Configuration\n', th2*180/pi)
 
 else  % Solve Mechanism
-%% Vector Loops and Jacobian
-%
+%% Vector Loops and Jacobian (Programmed by William)
+
 %  Note: Each element of x corresponds to a value to be solved via
 %  Newton-Raphson method. x = [R3, R4, R5, th3, th4]
 
@@ -72,18 +78,14 @@ J = @(x)    [-cos(x(4))               0      0         x(1)*sin(x(4))           
                       0               0      0                     -1                    1 ;];
                
                   
-%% Solve Using Newton Raphson
+%% Solve Using Newton Raphson (Programmed By William)
 
-tol = 1;
-n = 1;
-x_old = [R(3); R(4); R(5); th(3); th(4)];
+tol = 1; % Initial tolerance
+n = 1;   % Iteration counter
+
+x_old = [R(3); R(4); R(5); th(3); th(4)]; % Initial Guess
+
 while tol >= .01 % Set tolerance for solution here
-    
-%     if rcond(J(x_old))<.001
-%           x_new=[NaN NaN NaN NaN NaN];
-%           disp('invalid configuration')
-%        break
-%     end
 
     x_new = x_old - J(x_old)\(f(x_old));
 
@@ -91,7 +93,7 @@ while tol >= .01 % Set tolerance for solution here
 
     x_old = x_new;
     
-    conditn(n)=cond(J(x_new));
+    conditn(n)=cond(J(x_new)); % Jacobian Matrix Condition
     
     n = n+1;
     
@@ -103,8 +105,9 @@ R(5)  = x_new(3);
 th(3) = x_new(4);
 th(4) = x_new(5);
 
+% Evaluate mean condition of Jacobian display a message if system exhibits instability
 
-meancond=nearest(mean(conditn));
+meancond=nearest(mean(conditn)); 
 
 if meancond>20000
     fprintf('Theta 2 = %5.2f        Mean Condition = %11d        Iterations = %2d       (WARNING: NUMERICAL SYSTEM UNSTABLE)\n', th2/pi*180, meancond, n)
@@ -115,7 +118,10 @@ end
 position = [R, th]; % Solution for mechanism position
 
 
-%% 1st Order Kinematic Coefficients
+
+%% Kinematic Coefficents  (Programmed by Hector)
+
+% 1st Order Kinematic Coefficients
 
 f2 = @(x)   [ R(2)*sin(th(2)) ;
              -R(2)*cos(th(2)) ;
@@ -126,7 +132,7 @@ f2 = @(x)   [ R(2)*sin(th(2)) ;
 k1 = J(x_new)\f2(x_new);
 
 
-%% 2nd Order Kinematic Coefficients
+% 2nd Order Kinematic Coefficients
 
 f3 = @(x)   [R(2)*cos(th(2))-2*x(1)*x(4)*sin(th(3))-R(3)*x(4)^2*cos(th(2));
              R(2)*sin(th(2))+2*x(1)*x(4)*cos(th(3))-R(3)*x(4)^2*sin(th(2));
