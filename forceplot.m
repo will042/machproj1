@@ -12,7 +12,7 @@ R4max = max(findR4(:,1));
 
 for i = 1:360
      th = range(i);
-     forces=forces_Tknown(th, 0, 20, R4max);
+     forces=forces_Tknown(th, 0, 0, 10, R4max);
      fres(i)=forces(12);
  end
 % 

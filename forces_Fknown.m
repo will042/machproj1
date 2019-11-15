@@ -1,4 +1,4 @@
-function forces_Fknown = forces_Fknown(th2, w2, F5, R4max)
+function forces_Fknown = forces_Fknown(th2, w2, a2, F5, R4max)
 %%------------------------------------------------------------------------%
 % Programmed by: William Ard, Hector Arredondo, Miranda Pepper 
 %-------------------------------------------------------------------------%
@@ -28,10 +28,10 @@ function forces_Fknown = forces_Fknown(th2, w2, F5, R4max)
 % Specifications for Mass Calculations
 
  rho = 7700;     % Density of Steel (kg/m^3)
-  A  = .02*.04;  % Cross Sectional Area of Links (m)
+  A  = .02*.04;  % Cross Sectional Area of Links 2 & 4 (m)
   sm = .5;       % Slider Mass; (kg)
   sh = .05;      % Slider Height; (m)
-  dm = 1;        % Rigid Body 5 Mass (kg)
+  dm = 10;        % Rigid Body 5 Mass (kg)
   dh = .01;        % Rigid Body 5 Height (m)
 
 
@@ -63,6 +63,10 @@ th6 = pos(6,2);
        rho*A*R4max;
        dm];
 
+%  m = [0; 0; 0; 0; 0]
+
+
+
   g = 9.81; % (m/s^2)  
 
 
@@ -70,14 +74,12 @@ Ig = [0;
       1/12*m(2)*R2^2;
       1/12*m(3)*sh;
       1/12*m(4)*R4max
-      1/12*m(4)*dh];
+      1/12*m(5)*dh];
       
       
 
 %-------------------------------------------------------------------------%
 % Resolve angular accelerations of links
-
-a2 = 0;
 
 a = [0;
      a2;

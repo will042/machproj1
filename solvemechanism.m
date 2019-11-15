@@ -30,7 +30,7 @@ function [position, k1, k2, meancond] = solvemechanism(th2)
 
 %% Get link size and initial guesses from position.txt
 
-fid = fopen('position.txt','r');
+fid = fopen('lengthdata.txt','r');
 links = fscanf(fid,'%f, %f',[2 6]);
 links = links';
 fclose(fid);
@@ -44,14 +44,14 @@ if R(2)*sin(th2) >= R(6) && th2 < pi
                k1 = [NaN; NaN; NaN; NaN; NaN];
                k2 = [NaN; NaN; NaN; NaN; NaN];
          meancond = -50;
-         fprintf('Theta 2 = %6.2f      Invalid Mechanism Configuration\n', th2*180/pi)
+         fprintf('Theta 2 = %5.2f      Invalid Mechanism Configuration\n', th2*180/pi)
 
 elseif R(2)*sin(th2) <= -1*R(1) && th2 > pi
          position = [NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN];
                k1 = [NaN; NaN; NaN; NaN; NaN];
                k2 = [NaN; NaN; NaN; NaN; NaN];
          meancond = -50;
-         fprintf('Theta 2 = %6.2f      Invalid Mechanism Configuration\n', th2*180/pi)
+         fprintf('Theta 2 = %5.2f      Invalid Mechanism Configuration\n', th2*180/pi)
 
 else  % Solve Mechanism
 %% Vector Loops and Jacobian
@@ -107,9 +107,9 @@ th(4) = x_new(5);
 meancond=nearest(mean(conditn));
 
 if meancond>20000
-    fprintf('Theta 2 = %6.2f        Mean Condition = %11d        Iterations = %2d       (WARNING: NUMERICAL SYSTEM UNSTABLE)\n', th2/pi*180, meancond, n)
+    fprintf('Theta 2 = %5.2f        Mean Condition = %11d        Iterations = %2d       (WARNING: NUMERICAL SYSTEM UNSTABLE)\n', th2/pi*180, meancond, n)
 else
-    fprintf('Theta 2 = %6.2f        Mean Condition = %11d        Iterations = %2d\n', th2/pi*180, meancond, n)
+    fprintf('Theta 2 = %5.2f        Mean Condition = %11d        Iterations = %2d\n', th2/pi*180, meancond, n)
 end
 
 position = [R, th]; % Solution for mechanism position

@@ -1,4 +1,4 @@
-function forces_Tknown = forces_Tknown(th2, w2, T2, R4max)
+function forces_Tknown = forces_Tknown(th2, w2, a2, T2, R4max)
 %%------------------------------------------------------------------------%
 % Programmed by: William Ard, Hector Arredondo, Miranda Pepper 
 %-------------------------------------------------------------------------%
@@ -33,6 +33,7 @@ function forces_Tknown = forces_Tknown(th2, w2, T2, R4max)
   sh = .05;      % Slider Height; (m)
   dm = 1;        % Rigid Body 5 Mass (kg)
   dh = .01;        % Rigid Body 5 Height (m)
+  dw = rb5 %width
 
 
   
@@ -68,16 +69,15 @@ th6 = pos(6,2);
 
 Ig = [0;
       1/12*m(2)*R2^2;
-      1/12*m(3)*sh;
-      1/12*m(4)*R4max
-      1/12*m(4)*dh];
+      1/12*m(3)*sh^2;
+      1/12*m(4)*R4max^2
+      1/12*m(5)*(dh^2+dw^2];
       
       
 
 %-------------------------------------------------------------------------%
 % Resolve angular accelerations of links
 
-a2 = 0;
 
 a = [0;
      a2;
