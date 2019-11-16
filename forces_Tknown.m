@@ -1,6 +1,9 @@
 function forces_Tknown = forces_Tknown(th2, w2, a2, T2)
 %%------------------------------------------------------------------------%
-% Programmed by: William Ard, Hector Arredondo, Miranda Pepper 
+% Programmed by: William Ard
+% Louisiana State University, Undergraduate
+% Department of Mechanical Engineering
+% ward2@lsu.edu
 %-------------------------------------------------------------------------%
 % Goal: Solve IDP to determine forces on mechanism links
 %       This version solves for the output force at rigid body 5 from a
@@ -8,8 +11,8 @@ function forces_Tknown = forces_Tknown(th2, w2, a2, T2)
 %-------------------------------------------------------------------------%
 % Inputs:
 % 
-% NOTE: Specify mass and MOI Data in 'massmoidata.txt'. +
-%       Format is:     Mass 2, Ig 2
+% NOTE: Specify mass and MOI Data in 'massmoidata.txt'.
+%       Format is:     Mass 2, Ig 2    (kg), (kg-m^2)
 %                      Mass 3, Ig 3
 %                      Mass 4, Ig 4
 %                      Mass 5, Ig 5
@@ -44,7 +47,7 @@ function forces_Tknown = forces_Tknown(th2, w2, a2, T2)
   
   
 %-------------------------------------------------------------------------%
-% Solve for Position Vectors (Miranda)
+% Solve for Position Vectors
 
 [pos, k1, k2] = solvemechanism(th2);
 
@@ -66,7 +69,7 @@ R4max = (R1+R6)/cos(asin(R2/R1));
 g= 9.81;
 
 
-% Read Mass & MOI Data from Text File and Import (Miranda)
+% Read Mass & MOI Data from Text File and Import
 
 fid = fopen('massmoidata.txt','r');
 data = fscanf(fid,'%f, %f',[2 4]);
@@ -81,7 +84,7 @@ Ig(2:5,1) = data(:,2);
       
 
 %-------------------------------------------------------------------------%
-% Resolve angular accelerations of links (Miranda)
+% Resolve angular accelerations of links
 
 
 a = [0;
@@ -100,7 +103,7 @@ R10  = R4max/2 ;      % Link 4
   
 
 %-------------------------------------------------------------------------%
-% 1st & 2nd Order Kinematic Coefficients of CGs (Hector)
+% 1st & 2nd Order Kinematic Coefficients of CGs
 
 Fg  = [                       0                           0;
                    -R9*sin(th2)                 R9*cos(th2);
@@ -116,7 +119,7 @@ Fgp = [          0            0;
 
    
 %-------------------------------------------------------------------------%
-% Curvilinear Accelerations for CG's (Hector)
+% Curvilinear Accelerations for CG's
 
 ag=ones(5,2);
 
@@ -128,9 +131,9 @@ end
 
 
 %-------------------------------------------------------------------------%
-% IDP Solution (William)
+% IDP Solution
 
-F = [1  0  0  0  0  0  1  0  0  0  0  0;
+F = [1  0  0  0  0  0  1  0  0  0  0  0; % LHS of IDP
      0  1  0  0  0  0  0  1  0  0  0  0;
      0  0  0  0  0  0  -R2*sin(th2)  R2*cos(th2)  0  0  0  0;
      0  0  0  0  0  0  -1  0  0  cos(th4+pi/2)  0  0;
@@ -143,7 +146,7 @@ F = [1  0  0  0  0  0  1  0  0  0  0  0;
      0  0  0  0  1  0  0  0  0  0  -sin(th4+pi/2)  0;
      0  0  0  0  0  1  0  0  0  0  0  0];
 
-b = [m(2)*ag(2,1);
+b = [m(2)*ag(2,1); % RHS
      m(2)*ag(2,2);
      -T2+Ig(2)*a(2) + R9(1,1)*cos(th2)*m(2)*g+m(2)*R9(1,1)*(cos(th2)*ag(2,2)-sin(th2)*ag(2,1));
      m(3)*ag(3,1);
@@ -156,7 +159,7 @@ b = [m(2)*ag(2,1);
      m(5)*ag(5,2)+m(5)*g;
      Ig(5)*a(5)];
 
-forces_Tknown = F\b;
+forces_Tknown = F\b; %Solve Linear System
 
 
 end

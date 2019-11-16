@@ -1,6 +1,9 @@
-%%                           Plot Generator                              %%
+%%                    Kinematics Plot Generator                          %%
 %%------------------------------------------------------------------------%
-% Programmed by: William Ard, Hector Arredondo, Miranda Pepper 
+% Programmed by: William Ard
+% Louisiana State University, Undergraduate
+% Department of Mechanical Engineering
+% ward2@lsu.edu
 %-------------------------------------------------------------------------%
 % Goal: Generate plots of position, and 1st/2nd order kinematic
 % coefficients with respect to theta 2
@@ -24,7 +27,6 @@
 %
 %-------------------------------------------------------------------------%
 
-%% This Section coded by Miranda & Hector
 
 % Preallocate for computational efficiency
 
@@ -68,7 +70,7 @@ end
 range = range/pi*180;
 
 
-%% Export all Plots to PNG files (Programmed by Hector)
+%% Export all Plots to PNG files
 
 VectPos = figure('visible','off');
     plot(range,R(3,:),range,R(4,:),range,R(5,:), 'LineWidth',1)
@@ -141,7 +143,7 @@ AngleKin2 = figure('visible','off');
     
     
     
-%% Display all Plots on Single Figure Window (Programmed by Hector)
+%% Display all Plots on Single Figure Window
  
 figure(7)
 set(gcf, 'Position',  [100, 100, 1500, 700])

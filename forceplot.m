@@ -1,35 +1,18 @@
-range=linspace(0,2*pi,360);
-fres = linspace(0,360,360);
-
 range = linspace(0,2*pi,360);
-findR4 = ones(500,2);
-for n = 1:360
-    posrange = solvemechanism(range(n));
-    findR4(n,:) = posrange(4,:);
-end
-R4max = max(findR4(:,1));
-
 
 for i = 1:360
      th = range(i);
-     forces=forces_Tknown(th, 0, 0, 10, R4max);
-     fres(i)=forces(12);
+     forces=forces_Fknown(th, 0, 0, 10);
+     fres(:,i)=forces;
  end
-% 
-% for i = 208:333
-%     th = range(i);
-%     forces=forces_Fknown(th, 4, 10, R4max);
-%     fres(i)=forces(12);
-% end
-% 
-% for i = 334:360
-%     th = range(i);
-%     forces=forces_Fknown(th, 4, -10, R4max);
-%     fres(i)=forces(12);
-% end
+
 
 figure(15)
-plot(range./pi*180,fres)
+plot(range./pi*180,fres,'LineWidth',1)
+title('Required Torque for 5kg Mass')
 grid
 xlim([0 360])
 xticks(0:30:360)
+xlabel('\theta_2 (deg)')
+ylabel('Torque (N-m)')
+legend('F12x', 'F12y', 'F14x', 'F14y', 'F15', 'R8_F15', 'F23x', 'F23y', 'R7_F34', 'F34', 'F45', 'T2')

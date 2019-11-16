@@ -1,5 +1,8 @@
 %%------------------------------------------------------------------------%
 % Programmed by: William Ard
+% Louisiana State University, Undergraduate
+% Department of Mechanical Engineering
+% ward2@lsu.edu
 %-------------------------------------------------------------------------%
 % Goal: Produce Animation of Shaper Mechanism
 %-------------------------------------------------------------------------%

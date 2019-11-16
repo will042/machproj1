@@ -1,6 +1,9 @@
 function DrawMechanism(th2)
 %%------------------------------------------------------------------------%
 % Programmed by: William Ard
+% Louisiana State University, Undergraduate
+% Department of Mechanical Engineering
+% ward2@lsu.edu
 %-------------------------------------------------------------------------%
 % Goal: Draw mechanism for a given input of theta 2
 %-------------------------------------------------------------------------%
@@ -24,10 +27,10 @@ function DrawMechanism(th2)
 %-------------------------------------------------------------------------%
 
 %% Specify Approximate Dimensions
-w = .024;  % Width of Slider (m)
-h = .059;  % Height of Slider (m)
-wb = .14  ;   % Width RB5 (m)
-hb = .095  ;   % Height RB5 (m)
+w = .005;  % Width of Slider (m)
+h = .018;  % Height of Slider (m)
+wb = .035  ;   % Width RB5 (m)
+hb = .025  ;   % Height RB5 (m)
 
 
 %% Generate Cartesian Coordinates for All Vectors
