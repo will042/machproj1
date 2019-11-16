@@ -1,6 +1,9 @@
 function [position, k1, k2, meancond] = solvemechanism(th2)
 %%------------------------------------------------------------------------%
-% Programmed by: William Ard, Hector Arredondo, Miranda Pepper 
+% Programmed by: William Ard
+% Louisiana State University, Undergraduate
+% Department of Mechanical Engineering
+% ward2@lsu.edu
 %-------------------------------------------------------------------------%
 % Goal: Resolve position and kinematic coefficients for mechanism
 %-------------------------------------------------------------------------%
@@ -44,7 +47,7 @@ th = links(:,2)/180*pi; % Convert Degrees to Radians
 th(2) = th2;
 
 
-%% Assess mechanism to determine if system configuration is invalid & display error message (Programmed by Miranda)
+%% Assess mechanism to determine if system configuration is invalid & display error message
 if R(2)*sin(th2) >= R(6) && th2 < pi
          position = [NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN; NaN NaN];
                k1 = [NaN; NaN; NaN; NaN; NaN];
@@ -60,7 +63,7 @@ elseif R(2)*sin(th2) <= -1*R(1) && th2 > pi
          fprintf('Theta 2 = %5.2f      Invalid Mechanism Configuration\n', th2*180/pi)
 
 else  % Solve Mechanism
-%% Vector Loops and Jacobian (Programmed by William)
+%% Vector Loops and Jacobian
 
 %  Note: Each element of x corresponds to a value to be solved via
 %  Newton-Raphson method. x = [R3, R4, R5, th3, th4]
@@ -78,7 +81,7 @@ J = @(x)    [-cos(x(4))               0      0         x(1)*sin(x(4))           
                       0               0      0                     -1                    1 ;];
                
                   
-%% Solve Using Newton Raphson (Programmed By William)
+%% Solve Using Newton Raphson
 
 tol = 1; % Initial tolerance
 n = 1;   % Iteration counter
@@ -119,7 +122,7 @@ position = [R, th]; % Solution for mechanism position
 
 
 
-%% Kinematic Coefficents  (Programmed by Hector)
+%% Kinematic Coefficents
 
 % 1st Order Kinematic Coefficients
 
