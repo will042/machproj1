@@ -18,7 +18,7 @@
 % lengthdata.txt
 %
 %	Used to specify mechanism parameters for fixed lengths / angles and 
-%   initial guesses of unknown lengths and angles.
+% initial guesses of unknown lengths and angles.
 %
 %   FORMAT:
 %				R1, theta1
@@ -65,7 +65,7 @@
 % DrawMechanism.m
 %
 %	Draws the mechanism for a given input theta2. Outputs PNG files for
-%   each plot in the active MATLAB directory.
+% each plot in the active MATLAB directory.
 %
 %	USE: In command window, call function:
 %		 
@@ -83,7 +83,7 @@
 % forces_Fknown.m
 %
 %	Solve IDP to determine forces on mechanism links. This version solves 
-%   for T2 and all other reaction forces when there is a known force 
+% for T2 and all other reaction forces when there is a known force 
 %	applied to the output, rigid body 5.
 %
 %	USE: In command window, call function:
@@ -96,7 +96,7 @@
 % forces_Tknown.m
 %
 %	Solve IDP to determine forces on mechanism links. This version solves 
-%   for the output force at rigid body 5 and all other reaction forces 
+% for the output force at rigid body 5 and all other reaction forces 
 %	from a known input torque on link 2.
 %
 %	USE: In command window, call function:.
